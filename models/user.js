@@ -1,6 +1,6 @@
-const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
-const schema = new mongoose.schema({
+const schema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
@@ -11,10 +11,9 @@ const schema = new mongoose.schema({
     type: String,
     required: true,
   },
-  Posts: [
+  posts: [
     {
-      ref: 'Post',
-      type: mongoose.Schema.Types.ObjectId(),
+      type: Array,
     }
   ]
 })
