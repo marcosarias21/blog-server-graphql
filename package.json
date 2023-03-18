@@ -1,9 +1,31 @@
 {
   "dependencies": {
+    "@apollo/server": "^4.5.0",
     "apollo-server": "^3.12.0",
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "6.10.3",
-    "mongoose-unique-validator": "3.1.0"
-  }
+    "mongoose": "^6.10.3",
+    "mongoose-unique-validator": "^3.1.0"
+  },
+  "name": "blog-server-graphql",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marcosarias21/blog-server-graphql.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marcosarias21/blog-server-graphql/issues"
+  },
+  "homepage": "https://github.com/marcosarias21/blog-server-graphql#readme"
 }
