@@ -59,7 +59,11 @@ const resolvers = {
   Mutation : {
     createUser: async (root, args) => {
       const newUser = new User({...args})
-      await newUser.save()
+      try {
+        return await newUser.save()        
+      } catch (error) {
+        UserInputError(error)
+      }
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });

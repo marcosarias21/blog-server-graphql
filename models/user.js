@@ -5,7 +5,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
     uniquie: true,
-    minlenght: 3
+    minlenght: 3,
   },
   password: {
     type: String,
