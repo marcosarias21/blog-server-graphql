@@ -21,7 +21,6 @@ const typeDefinitions = gql`
   type Post {
     title: String!
     description: String!
-    time: String!
   }
 
   type Token {
@@ -43,7 +42,11 @@ const typeDefinitions = gql`
       username: String!
       password: String!
     ) : Token
-  
+    
+    createPost(
+      title: String!
+      description: String!
+      ) : Post
   }
 `
 const resolvers = {
@@ -79,6 +82,16 @@ const resolvers = {
       } else {
         throw new UserInputError('wrong credentials', { invalidArgs: args.password })
        }
+      },
+      createPost: async (root, args, context) => {
+        const { currentUser } = context;
+        console.log(currentUser.posts);
+        if (!currentUser) AuthenticationError('You need to be logged in')
+        return await User.findByIdAndUpdate(currentUser._id, {
+          $push: {
+            posts: { description: args.description, title: args.title },
+          },
+        })
       }
     }
   }
