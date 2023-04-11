@@ -13,8 +13,8 @@ const schema = new mongoose.Schema({
   },
   posts: [
     {
-      description: String,
       title: String,
+      description: String,
     }
   ]
 })

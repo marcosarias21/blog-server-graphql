@@ -19,8 +19,8 @@ const typeDefinitions = gql`
   }
 
   type Post {
-    title: String!
-    description: String!
+    title: String
+    description: String
   }
 
   type Token {
@@ -44,9 +44,9 @@ const typeDefinitions = gql`
     ) : Token
     
     createPost(
-      title: String!
-      description: String!
-      ) : Post
+      title: String
+      description: String
+      ) : Post!
   }
 `
 const resolvers = {
@@ -84,6 +84,7 @@ const resolvers = {
        }
       },
       createPost: async (root, args, context) => {
+        console.log(args.description)
         const { currentUser } = context;
         console.log(currentUser.posts);
         if (!currentUser) AuthenticationError('You need to be logged in')
