@@ -18,9 +18,14 @@ const typeDefinitions = gql`
     id: ID!
   }
 
+  type comment {
+    message: String!
+    user: String
+  }
   type Post {
     title: String
     description: String
+    comments: [comment]
   }
 
   type Token {
@@ -47,6 +52,11 @@ const typeDefinitions = gql`
       title: String
       description: String
       ) : Post!
+    
+    createComment(
+      id: ID!
+      message: String!
+    ) : comment
   }
 `
 const resolvers = {
@@ -91,6 +101,16 @@ const resolvers = {
         return await User.findByIdAndUpdate(currentUser._id, {
           $push: {
             posts: { description: args.description, title: args.title },
+          },
+        })
+      },
+      createComment: async (root, args, context) => {
+        console.log(args);
+        const { currentUser } = context;
+        if (!currentUser) AuthenticationError('You need to be logged in')
+        return await User.findByIdAndUpdate(args.id, {
+          $push: {
+            posts: { comments: { message: args.message, user: currentUser.username }  },
           },
         })
       }
