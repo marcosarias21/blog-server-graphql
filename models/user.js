@@ -15,6 +15,10 @@ const schema = new mongoose.Schema({
     {
       title: String,
       description: String,
+      comments: [{
+        message: String,
+        user: String,
+      }],
     }
   ]
 })
