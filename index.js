@@ -23,6 +23,7 @@ const typeDefinitions = gql`
     user: String
   }
   type Post {
+    id: ID!
     title: String
     description: String
     comments: [comment]
@@ -94,7 +95,6 @@ const resolvers = {
        }
       },
       createPost: async (root, args, context) => {
-        console.log(args.description)
         const { currentUser } = context;
         console.log(currentUser.posts);
         if (!currentUser) AuthenticationError('You need to be logged in')
@@ -107,12 +107,11 @@ const resolvers = {
       createComment: async (root, args, context) => {
         console.log(args);
         const { currentUser } = context;
+        console.log(currentUser.id)
         if (!currentUser) AuthenticationError('You need to be logged in')
-        return await User.findByIdAndUpdate(args.id, {
-          $push: {
-            posts: { comments: { message: args.message, user: currentUser.username }  },
-          },
-        })
+        return await User.findOneAndUpdate( { 'posts._id': args.id },
+        { $push: { 'posts.$.comments': { message: args.message, user: currentUser.username } } },
+        { new: true })
       }
     }
   }

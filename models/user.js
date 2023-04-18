@@ -13,6 +13,10 @@ const schema = new mongoose.Schema({
   },
   posts: [
     {
+      _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          auto: false,
+      },
       title: String,
       description: String,
       comments: [{
