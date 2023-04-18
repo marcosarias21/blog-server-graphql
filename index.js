@@ -107,7 +107,6 @@ const resolvers = {
       createComment: async (root, args, context) => {
         console.log(args);
         const { currentUser } = context;
-        console.log(currentUser.id)
         if (!currentUser) AuthenticationError('You need to be logged in')
         return await User.findOneAndUpdate( { 'posts._id': args.id },
         { $push: { 'posts.$.comments': { message: args.message, user: currentUser.username } } },
