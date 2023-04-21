@@ -108,7 +108,7 @@ const resolvers = {
         console.log(args);
         const { currentUser } = context;
         if (!currentUser) AuthenticationError('You need to be logged in')
-        return await User.findOneAndUpdate( { 'posts._id': args.id },
+        return await User.findOneAndUpdate({ 'posts._id': args.id },
         { $push: { 'posts.$.comments': { message: args.message, user: currentUser.username } } },
         { new: true })
       }
