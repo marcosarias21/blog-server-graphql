@@ -22,11 +22,17 @@ const typeDefinitions = gql`
     message: String!
     user: String
   }
+
+  type like {
+    user: String
+  }
+
   type Post {
     id: ID!
     title: String
     description: String
     comments: [comment]
+    likes: [like]
   }
 
   type Token {
@@ -58,6 +64,11 @@ const typeDefinitions = gql`
       id: ID!
       message: String!
     ) : comment
+
+    addLikePost(
+      id: ID!
+      user: String
+    ) : like
   }
 `
 const resolvers = {
@@ -111,6 +122,17 @@ const resolvers = {
         return await User.findOneAndUpdate( { 'posts._id': args.id },
         { $push: { 'posts.$.comments': { message: args.message, user: currentUser.username } } },
         { new: true })
+      },
+      addLikePost: async (root, args, context) => {
+        const { currentUser } = context;
+        const post = await User.findOne({'posts._id': args.id}, { 'posts.$': 1 });
+        const likes = post.posts[0].likes;
+        const validationUserLike = likes[0]?.user?.includes(currentUser.username);
+        console.log(validationUserLike);
+        if (validationUserLike)  AuthenticationError('You can give one like per account');     
+        return await User.findOneAndUpdate( {'posts._id': args.id},
+          { $push: {'posts.$.likes': { user: currentUser.username } } },
+        )
       }
     }
   }

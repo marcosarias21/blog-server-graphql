@@ -15,7 +15,7 @@ const schema = new mongoose.Schema({
     {
       _id: {
           type: mongoose.Schema.Types.ObjectId,
-          auto: false,
+          auto: true,
       },
       title: String,
       description: String,
@@ -23,6 +23,9 @@ const schema = new mongoose.Schema({
         message: String,
         user: String,
       }],
+      likes: [{
+        user: String,
+      }]
     }
   ]
 })
