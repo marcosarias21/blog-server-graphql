@@ -25,6 +25,7 @@ const typeDefinitions = gql`
 
   type like {
     user: String
+    id: ID!
   }
 
   type Post {
@@ -43,22 +44,26 @@ const typeDefinitions = gql`
     allUser: [User]!
     me: User!
   }
-
+  
   type Mutation {
     createUser(
       username: String!
       password: String!
-    ) : User
-
+      ) : User
+      
     login(
       username: String!
       password: String!
     ) : Token
-    
+        
+    getPostById(
+      id: ID!
+    ) : Post
+
     createPost(
       title: String
       description: String
-      ) : Post!
+    ) : Post!
     
     createComment(
       id: ID!
@@ -105,6 +110,10 @@ const resolvers = {
         throw new UserInputError('wrong credentials', { invalidArgs: args.password })
        }
       },
+      getPostById: async (root, args) => {
+        const post = await User.findOne({'posts._id': args.id}, { 'posts.$': 1 })
+        return post;
+      },
       createPost: async (root, args, context) => {
         const { currentUser } = context;
         console.log(currentUser.posts);
@@ -131,7 +140,7 @@ const resolvers = {
         console.log(validationUserLike);
         if (validationUserLike)  AuthenticationError('You can give one like per account');     
         return await User.findOneAndUpdate( {'posts._id': args.id},
-          { $push: {'posts.$.likes': { user: currentUser.username } } },
+          { $push: {'posts.$.likes': { user: currentUser.username, id: currentUser._id } } },
         )
       }
     }
