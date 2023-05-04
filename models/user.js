@@ -24,6 +24,7 @@ const schema = new mongoose.Schema({
         user: String,
       }],
       likes: [{
+        id: String,
         user: String,
       }]
     }
