@@ -1,6 +1,5 @@
 import { AuthenticationError, gql, UserInputError } from "apollo-server";
 import { ApolloServer } from "apollo-server";
-import bcrypt from 'bcrypt';
 import User from './models/user.js';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -30,6 +29,7 @@ const typeDefinitions = gql`
 
   type Post {
     id: ID!
+    author: String!
     title: String
     description: String
     comments: [comment]
@@ -43,6 +43,7 @@ const typeDefinitions = gql`
   type  Query {
     allUser: [User]!
     me: User!
+    getPostById(id: ID!) : [Post]!
   }
   
   type Mutation {
@@ -55,10 +56,6 @@ const typeDefinitions = gql`
       username: String!
       password: String!
     ) : Token
-        
-    getPostById(
-      id: ID!
-    ) : Post
 
     createPost(
       title: String
@@ -78,6 +75,11 @@ const typeDefinitions = gql`
 `
 const resolvers = {
   Query: {
+    getPostById: async (root, args) => {
+      const post = await User.findOne({'posts._id': args.id}, { 'posts.$': 1 })
+      const { posts } = post;
+      return posts;
+    },
     allUser: async () => {
       const user = await User.find({});
       return user
@@ -110,17 +112,14 @@ const resolvers = {
         throw new UserInputError('wrong credentials', { invalidArgs: args.password })
        }
       },
-      getPostById: async (root, args) => {
-        const post = await User.findOne({'posts._id': args.id}, { 'posts.$': 1 })
-        return post;
-      },
+
       createPost: async (root, args, context) => {
         const { currentUser } = context;
         console.log(currentUser.posts);
         if (!currentUser) AuthenticationError('You need to be logged in')
         return await User.findByIdAndUpdate(currentUser._id, {
           $push: {
-            posts: { description: args.description, title: args.title },
+            posts: { description: args.description, title: args.title, author: currentUser.username },
           },
         })
       },
