@@ -17,6 +17,7 @@ const schema = new mongoose.Schema({
           type: mongoose.Schema.Types.ObjectId,
           auto: true,
       },
+      author: String,
       title: String,
       description: String,
       comments: [{

@@ -29,7 +29,7 @@ const typeDefinitions = gql`
 
   type Post {
     id: ID!
-    author: String!
+    author: String
     title: String
     description: String
     comments: [comment]
