@@ -75,10 +75,12 @@ const typeDefinitions = gql`
 `
 const resolvers = {
   Query: {
-    getPostById: async (root, args) => {
-      const post = await User.findOne({'posts._id': args.id}, { 'posts.$': 1 })
-      const { posts } = post;
-      return posts;
+    getPostById: async (root, { id }) => {
+      const users = await User.find({});
+      const posts = users.flatMap(user => user.posts);
+      console.log(posts);
+      const filteredPost = posts.filter(post => post._id.toString() === id)
+      return filteredPost;
     },
     allUser: async () => {
       const user = await User.find({});
